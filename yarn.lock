@@ -832,7 +832,7 @@
     "jsonwebtoken" "^8.5.1"
     "yargs" "^16.2.0"
 
-"json-server@*":
+"json-server@*", "json-server@^0.17.0":
   "integrity" "sha512-+e/nW0mf666j1yTK+5dRx7hgxq5wJTkc5QhTYa/cBfD6vLlQWHfB4l8XKPgzeO55A8Hqm38g44OtZ5SooXi6MQ=="
   "resolved" "https://registry.npmjs.org/json-server/-/json-server-0.17.0.tgz"
   "version" "0.17.0"

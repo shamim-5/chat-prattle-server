@@ -4,8 +4,21 @@ const express = require("express");
 const http = require("http");
 
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PATCH"],
+    credentials: true,
+  })
+);
 const server = http.createServer(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "PATCH"],
+    credentials: true,
+  },
+});
 
 global.io = io;
 
@@ -18,15 +31,15 @@ router.render = (req, res) => {
 
   if (path.includes("/conversations")) {
     // emit socket event
-     if (method === "PATCH") {
-       io.emit("conversationEdited", {
-         data: res.locals.data,
-       });
-     } else if (method === "POST") {
-       io.emit("conversationAdded", {
-         data: res.locals.data,
-       });
-     }
+    if (method === "PATCH") {
+      io.emit("conversationEdited", {
+        data: res.locals.data,
+      });
+    } else if (method === "POST") {
+      io.emit("conversationAdded", {
+        data: res.locals.data,
+      });
+    }
   }
 
   if (path.includes("/messages") && method === "POST") {
@@ -39,7 +52,7 @@ router.render = (req, res) => {
   res.json(res.locals.data);
 };
 
-const middlewares = jsonServer.defaults();
+const middlewares = jsonServer.defaults({ noCors: true });
 const port = process.env.PORT || 9000;
 
 // Bind the router db to the app
