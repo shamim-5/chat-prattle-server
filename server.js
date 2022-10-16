@@ -2,7 +2,7 @@ const auth = require("json-server-auth");
 const jsonServer = require("json-server");
 const express = require("express");
 const http = require("http");
-
+const cors = require("cors");
 const app = express();
 app.use(
   cors({
@@ -30,8 +30,8 @@ router.render = (req, res) => {
   const method = req.method;
 
   if (path.includes("/conversations")) {
-    // emit socket event
     if (method === "PATCH") {
+      // emit socket event
       io.emit("conversationEdited", {
         data: res.locals.data,
       });
@@ -41,12 +41,14 @@ router.render = (req, res) => {
       });
     }
   }
-
-  if (path.includes("/messages") && method === "POST") {
-    // emit socket event for messages
-    io.emit("message", {
-      data: res.locals.data,
-    });
+  if (path.includes("/messages")) {
+    console.log(" message came here");
+    if (method === "POST") {
+      console.log("message is posting");
+      io.emit("messageAdded", {
+        data: res.locals.data,
+      });
+    }
   }
 
   res.json(res.locals.data);
@@ -61,7 +63,6 @@ app.db = router.db;
 app.use(middlewares);
 
 const rules = auth.rewriter({
-  // Permission rules
   users: 640,
   conversations: 660,
   messages: 660,
